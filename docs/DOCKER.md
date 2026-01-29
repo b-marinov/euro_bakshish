@@ -2,6 +2,31 @@
 
 This guide explains how to run the Euro Bakshish application using Docker on your PC.
 
+## Architecture Overview
+
+The Docker setup consists of three main services:
+
+1. **PostgreSQL Database** (`db`)
+   - Image: `postgres:15-alpine`
+   - Port: 5432
+   - Stores all application data
+   - Includes health checks for reliable startup
+
+2. **Django Backend** (`backend`)
+   - Built from: `backend/Dockerfile`
+   - Port: 8000
+   - Entry point: `backend/entrypoint.sh` (automatically runs migrations, collects static files, and starts server)
+   - Depends on: Database (waits for it to be healthy)
+   - Serves: REST API and admin interface
+
+3. **React Frontend** (`web`)
+   - Built from: `web/Dockerfile`
+   - Port: 80
+   - Nginx server serving static React build
+   - Depends on: Backend API
+
+All services communicate through a dedicated Docker network: `euro_bakshish_network`
+
 ## Prerequisites
 
 - **Docker**: Install [Docker Desktop](https://www.docker.com/products/docker-desktop/) (includes Docker Compose)
@@ -227,6 +252,39 @@ docker-compose --env-file .env up -d
 
 ## Troubleshooting
 
+### Backend container fails to start or shows "no entrypoint" error
+
+The backend uses an entrypoint script (`backend/entrypoint.sh`) that automatically:
+1. Waits for PostgreSQL to be ready
+2. Runs database migrations
+3. Collects static files
+4. Creates a default admin user
+5. Starts the Django server
+
+**Common issues:**
+
+```bash
+# 1. Check if entrypoint script is executable
+cd backend && ls -la entrypoint.sh
+# Should show: -rwxr-xr-x (executable permissions)
+
+# 2. If permissions are wrong, fix them:
+chmod +x backend/entrypoint.sh
+
+# 3. Check backend logs for detailed error
+docker-compose logs backend
+
+# 4. Verify Dockerfile has correct entrypoint
+cat backend/Dockerfile | grep ENTRYPOINT
+# Should show: ENTRYPOINT ["/app/entrypoint.sh"]
+
+# 5. Rebuild backend image after fixing
+docker-compose build --no-cache backend
+docker-compose up -d backend
+```
+
+**Note**: The `docker-compose.yml` should NOT have a `command:` directive for the backend service, as this would override the Dockerfile's ENTRYPOINT. The entrypoint is properly configured in the Dockerfile.
+
 ### Backend won't start
 
 ```bash
@@ -239,6 +297,9 @@ docker-compose restart backend
 
 # 2. Migration errors - run migrations manually
 docker-compose exec backend python manage.py migrate
+
+# 3. Permission errors - check file permissions
+ls -la backend/entrypoint.sh
 ```
 
 ### Frontend shows API errors

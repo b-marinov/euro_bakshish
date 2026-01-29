@@ -86,7 +86,7 @@ jobs:
       run: |
         max_attempts=30
         attempt=0
-        until curl -s http://localhost:8000/api/ > /dev/null || [ $attempt -eq $max_attempts ]; do
+        until curl -s -o /dev/null -w "%{http_code}" http://localhost:8000/api/ | grep -q "[0-9]" || [ $attempt -eq $max_attempts ]; do
           echo "Waiting for backend... (attempt $((++attempt))/$max_attempts)"
           sleep 5
         done

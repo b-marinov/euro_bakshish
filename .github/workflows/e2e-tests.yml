@@ -8,8 +8,9 @@ on:
   workflow_dispatch:
 
 # Disabled for now - early stage development
-jobs: {}
+jobs:
   e2e-tests:
+    if: false
     runs-on: ubuntu-latest
     timeout-minutes: 30
 

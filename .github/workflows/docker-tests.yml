@@ -75,12 +75,12 @@ jobs:
 
     - name: Start services with Docker Compose
       run: |
-        docker-compose up -d
+        docker compose up -d
         echo "Waiting for services to be healthy..."
         sleep 30
 
     - name: Check running containers
-      run: docker-compose ps
+      run: docker compose ps
 
     - name: Check backend health
       run: |
@@ -92,7 +92,7 @@ jobs:
         done
         if [ $attempt -eq $max_attempts ]; then
           echo "Backend failed to start"
-          docker-compose logs backend
+          docker compose logs backend
           exit 1
         fi
         echo "Backend is healthy"
@@ -107,29 +107,29 @@ jobs:
         done
         if [ $attempt -eq $max_attempts ]; then
           echo "Frontend failed to start"
-          docker-compose logs web
+          docker compose logs web
           exit 1
         fi
         echo "Frontend is healthy"
 
     - name: Run backend tests in Docker
       run: |
-        docker-compose exec -T backend pytest -v
+        docker compose exec -T backend pytest -v
 
     - name: Check database connectivity
       run: |
-        docker-compose exec -T db psql -U postgres -d euro_bakshish -c "SELECT 1;"
+        docker compose exec -T db psql -U postgres -d euro_bakshish -c "SELECT 1;"
 
     - name: Show logs on failure
       if: failure()
       run: |
         echo "=== Backend logs ==="
-        docker-compose logs backend
+        docker compose logs backend
         echo "=== Database logs ==="
-        docker-compose logs db
+        docker compose logs db
         echo "=== Web logs ==="
-        docker-compose logs web
+        docker compose logs web
 
     - name: Stop services
       if: always()
-      run: docker-compose down -v
+      run: docker compose down -v

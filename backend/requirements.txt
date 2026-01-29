@@ -1,0 +1,29 @@
+# Core Django packages
+Django>=4.2.0,<5.0.0
+djangorestframework>=3.14.0
+django-cors-headers>=4.0.0
+django-filter>=23.0
+
+# Database
+psycopg2-binary>=2.9.0
+
+# Authentication
+djangorestframework-simplejwt>=5.2.0
+PyJWT>=2.8.0
+
+# API Documentation
+drf-spectacular>=0.26.0
+
+# Environment variables
+python-decouple>=3.8
+
+# Image handling
+Pillow>=10.0.0
+
+# Geolocation
+geopy>=2.3.0
+
+# Development
+pytest>=7.4.0
+pytest-django>=4.5.0
+factory-boy>=3.2.0

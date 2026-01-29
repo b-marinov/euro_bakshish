@@ -2,6 +2,8 @@
 
 Welcome to Euro Bakshish! This comprehensive tutorial will guide you through using both the web application and Android app to enjoy our ride-sharing platform.
 
+> **📝 Note about Screenshots:** The screenshots in this tutorial are currently placeholders. They demonstrate the layout and flow of the application. For instructions on capturing and replacing them with actual screenshots, see [images/README.md](images/README.md).
+
 ## Table of Contents
 
 1. [Getting Started](#getting-started)

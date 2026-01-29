@@ -48,7 +48,11 @@ euro_bakshish/
 
 ### New Users? Start Here! 👋
 
-If you're new to Euro Bakshish and want to learn how to use the application, check out our comprehensive **[User Tutorial](docs/USER_TUTORIAL.md)** with screenshots and step-by-step instructions for both web and Android apps.
+**Just want to use the app?** Check out:
+- 🚀 **[Quick Start Guide](docs/QUICK_START_GUIDE.md)** - Get started in 5 minutes
+- 📖 **[User Tutorial](docs/USER_TUTORIAL.md)** - Complete guide with screenshots for web and Android apps
+
+**Want to set up for development?** Continue below:
 
 ### Option 1: Docker (Recommended) 🐳
 
@@ -137,7 +141,11 @@ API documentation is available at `/api/docs/` when running the backend server.
 
 ## Documentation
 
+### For Users
+- **[Quick Start Guide](docs/QUICK_START_GUIDE.md)**: ⚡ Get started in 5 minutes
 - **[User Tutorial](docs/USER_TUTORIAL.md)**: 📖 Complete guide for using the web and Android apps
+
+### For Developers
 - **[Docker Guide](docs/DOCKER.md)**: Complete Docker setup and commands
 - **[CI/CD Pipeline](docs/CI_CD.md)**: Continuous integration and testing
 - **[Setup Guide](docs/SETUP.md)**: Manual installation instructions

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { Container } from '@mui/material';
+import { useSelector } from 'react-redux';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
@@ -11,6 +12,8 @@ import NavBar from './components/NavBar';
 import PrivateRoute from './components/PrivateRoute';
 
 function App() {
+  const { isAuthenticated } = useSelector((state) => state.auth);
+
   return (
     <div className="App">
       <NavBar />
@@ -50,7 +53,10 @@ function App() {
               </PrivateRoute>
             }
           />
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          <Route 
+            path="/" 
+            element={<Navigate to={isAuthenticated ? "/dashboard" : "/login"} replace />} 
+          />
         </Routes>
       </Container>
     </div>

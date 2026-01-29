@@ -47,6 +47,21 @@ euro_bakshish/
 - Android Studio (for Android development)
 - PostgreSQL
 
+### Quick Setup
+
+See [docs/SETUP.md](docs/SETUP.md) for detailed setup instructions.
+
+### Security
+
+⚠️ **Important**: Please review [docs/SECURITY.md](docs/SECURITY.md) before deploying to production.
+
+Key security considerations:
+- Set SECRET_KEY via environment variable (required)
+- Use HTTPS in production
+- Review token storage mechanisms
+- Configure CORS properly
+- Keep dependencies updated
+
 ### Backend Setup
 
 ```bash

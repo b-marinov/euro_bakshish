@@ -1,5 +1,6 @@
 package com.eurobakshish.services
 
+import com.eurobakshish.BuildConfig
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -11,7 +12,11 @@ import java.util.concurrent.TimeUnit
  * Retrofit client for API communication
  */
 object RetrofitClient {
-    private const val BASE_URL = "http://10.0.2.2:8000/api/" // Android emulator localhost
+    // TODO: Configure this URL based on your environment
+    // - For Android Emulator: http://10.0.2.2:8000/api/
+    // - For Physical Device: http://YOUR_IP_ADDRESS:8000/api/
+    // - For Production: https://your-domain.com/api/
+    private const val BASE_URL = "http://10.0.2.2:8000/api/"
     
     private var authToken: String? = null
     
@@ -28,7 +33,12 @@ object RetrofitClient {
     }
     
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
-        level = HttpLoggingInterceptor.Level.BODY
+        // Use BASIC level in production to avoid logging sensitive data
+        level = if (BuildConfig.DEBUG) {
+            HttpLoggingInterceptor.Level.BODY
+        } else {
+            HttpLoggingInterceptor.Level.BASIC
+        }
     }
     
     private val okHttpClient = OkHttpClient.Builder()

@@ -56,7 +56,7 @@ class TripUpdateSerializer(serializers.ModelSerializer):
 class TripHistorySerializer(serializers.ModelSerializer):
     """Simplified serializer for trip history"""
     passenger_name = serializers.CharField(source='passenger.get_full_name', read_only=True)
-    driver_name = serializers.CharField(source='driver.get_full_name', read_only=True)
+    driver_name = serializers.SerializerMethodField()
     has_passenger_review = serializers.SerializerMethodField()
     has_driver_review = serializers.SerializerMethodField()
     
@@ -69,6 +69,10 @@ class TripHistorySerializer(serializers.ModelSerializer):
             'requested_at', 'completed_at',
             'has_passenger_review', 'has_driver_review'
         ]
+    
+    def get_driver_name(self, obj):
+        """Get driver name, handling null driver"""
+        return obj.driver.get_full_name() if obj.driver else None
     
     def get_has_passenger_review(self, obj):
         """Check if passenger has reviewed this trip"""

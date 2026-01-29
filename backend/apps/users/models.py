@@ -47,8 +47,9 @@ class User(AbstractUser):
         if hasattr(self, 'driver_profile') and self.driver_profile:
             ratings.append(self.driver_profile.average_rating)
         
-        if ratings:
-            return sum(r for r in ratings if r is not None) / len([r for r in ratings if r is not None])
+        valid_ratings = [r for r in ratings if r is not None]
+        if valid_ratings:
+            return sum(valid_ratings) / len(valid_ratings)
         return None
 
 

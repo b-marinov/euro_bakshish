@@ -19,8 +19,8 @@ git clone https://github.com/b-marinov/euro_bakshish.git
 cd euro_bakshish
 
 # Option 2: If already cloned, rebuild without cache
-docker-compose build --no-cache
-docker-compose up -d
+docker compose build --no-cache
+docker compose up -d
 ```
 
 The repository now includes a `.gitattributes` file that enforces correct line endings, but if you cloned before this fix, use Option 2.
@@ -37,7 +37,7 @@ cd euro_bakshish
 ### Step 2: Start All Services
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 This single command will:
@@ -63,16 +63,16 @@ This single command will:
 
 ```bash
 # View logs
-docker-compose logs -f
+docker compose logs -f
 
 # Stop all services
-docker-compose down
+docker compose down
 
 # Restart services
-docker-compose restart
+docker compose restart
 
 # View running containers
-docker-compose ps
+docker compose ps
 ```
 
 ## Development Mode (Hot Reload)
@@ -80,7 +80,7 @@ docker-compose ps
 For development with automatic code reloading:
 
 ```bash
-docker-compose -f docker-compose.dev.yml up
+docker compose -f docker-compose.dev.yml up
 ```
 
 Access at:
@@ -108,9 +108,9 @@ This is usually caused by Windows line ending issues. Try:
 
 ```bash
 # Rebuild without cache to fix line endings
-docker-compose down
-docker-compose build --no-cache backend
-docker-compose up -d
+docker compose down
+docker compose build --no-cache backend
+docker compose up -d
 
 # Or if that doesn't work, ensure Git is configured correctly
 git config core.autocrlf input
@@ -123,13 +123,13 @@ The Dockerfile now automatically converts line endings, but if you cloned before
 
 ```bash
 # Check what's running
-docker-compose ps
+docker compose ps
 
 # View logs for errors
-docker-compose logs
+docker compose logs
 
 # Try restarting
-docker-compose restart
+docker compose restart
 ```
 
 ### Port already in use?
@@ -144,10 +144,10 @@ ports:
 
 ```bash
 # Stop and remove everything
-docker-compose down -v
+docker compose down -v
 
 # Start again
-docker-compose up -d
+docker compose up -d
 ```
 
 ## Next Steps
@@ -164,8 +164,8 @@ docker-compose up -d
 
 ## Need Help?
 
-- View logs: `docker-compose logs -f backend`
-- Check database: `docker-compose exec db psql -U postgres -d euro_bakshish`
-- Access backend shell: `docker-compose exec backend bash`
+- View logs: `docker compose logs -f backend`
+- Check database: `docker compose exec db psql -U postgres -d euro_bakshish`
+- Access backend shell: `docker compose exec backend bash`
 
 Happy coding! 🎉

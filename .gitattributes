@@ -10,7 +10,3 @@
 
 # Python files should use LF
 *.py text eol=lf
-
-# Ensure specific shell scripts always use LF
-entrypoint.sh text eol=lf
-validate-docker-setup.sh text eol=lf

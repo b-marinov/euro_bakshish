@@ -129,7 +129,40 @@ npm start
 
 ## API Documentation
 
-API documentation is available at `/api/docs/` when running the backend server.
+The API provides comprehensive interactive documentation:
+
+### Interactive Swagger UI
+When the backend is running, access the interactive API documentation:
+- **URL**: `http://localhost:8000/api/docs/`
+- **Features**: 
+  - Try out API endpoints directly in the browser
+  - View request/response schemas
+  - Test authentication flows
+  - See example requests and responses
+
+### OpenAPI Schema
+Machine-readable API specification:
+- **URL**: `http://localhost:8000/api/schema/`
+- Import into Postman, Insomnia, or other API clients
+
+### Static Documentation
+Detailed API reference: [docs/API.md](docs/API.md)
+- Complete endpoint descriptions
+- Authentication guide
+- Example workflows
+- Error handling
+
+### Quick API Test
+Once the backend is running, test the API:
+```bash
+# Get API root
+curl http://localhost:8000/api/
+
+# Create a user (example)
+curl -X POST http://localhost:8000/api/users/ \
+  -H "Content-Type: application/json" \
+  -d '{"username": "testuser", "email": "test@example.com", ...}'
+```
 
 ## Documentation
 

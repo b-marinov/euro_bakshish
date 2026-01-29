@@ -1,0 +1,180 @@
+name: End-to-End Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+jobs:
+  e2e-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: Create .env file for backend
+      run: |
+        cat > backend/.env << EOF
+        SECRET_KEY=test-secret-key-for-e2e
+        DEBUG=True
+        ALLOWED_HOSTS=localhost,127.0.0.1,backend
+        DB_NAME=euro_bakshish
+        DB_USER=postgres
+        DB_PASSWORD=postgres
+        DB_HOST=db
+        DB_PORT=5432
+        CORS_ALLOWED_ORIGINS=http://localhost:3000,http://localhost:80
+        EOF
+
+    - name: Start services with Docker Compose
+      run: |
+        docker-compose up -d
+        echo "Waiting for services to start..."
+        sleep 45
+
+    - name: Wait for backend to be ready
+      run: |
+        max_attempts=60
+        attempt=0
+        until curl -f http://localhost:8000/api/ || [ $attempt -eq $max_attempts ]; do
+          echo "Waiting for backend... (attempt $((++attempt))/$max_attempts)"
+          sleep 5
+        done
+        if [ $attempt -eq $max_attempts ]; then
+          echo "Backend failed to start"
+          docker-compose logs backend
+          exit 1
+        fi
+
+    - name: Wait for frontend to be ready
+      run: |
+        max_attempts=30
+        attempt=0
+        until curl -f http://localhost/ || [ $attempt -eq $max_attempts ]; do
+          echo "Waiting for frontend... (attempt $((++attempt))/$max_attempts)"
+          sleep 3
+        done
+        if [ $attempt -eq $max_attempts ]; then
+          echo "Frontend failed to start"
+          docker-compose logs web
+          exit 1
+        fi
+
+    - name: Install Playwright
+      run: |
+        npm install -g playwright
+        playwright install --with-deps chromium
+
+    - name: Create E2E test directory
+      run: mkdir -p e2e-tests
+
+    - name: Create E2E test script
+      run: |
+        cat > e2e-tests/test.spec.js << 'EOF'
+        const { chromium } = require('playwright');
+
+        (async () => {
+          const browser = await chromium.launch();
+          const context = await browser.newContext();
+          const page = await context.newPage();
+
+          try {
+            // Test 1: Frontend loads
+            console.log('Test 1: Checking if frontend loads...');
+            await page.goto('http://localhost/', { waitUntil: 'networkidle' });
+            const title = await page.title();
+            console.log('Page title:', title);
+            if (!title.includes('Euro Bakshish')) {
+              throw new Error('Frontend did not load correctly');
+            }
+            console.log('✓ Frontend loaded successfully');
+
+            // Test 2: API is accessible
+            console.log('\nTest 2: Checking API accessibility...');
+            const response = await page.goto('http://localhost:8000/api/', { waitUntil: 'networkidle' });
+            if (!response.ok()) {
+              throw new Error('API is not accessible');
+            }
+            console.log('✓ API is accessible');
+
+            // Test 3: API documentation loads
+            console.log('\nTest 3: Checking API documentation...');
+            const docsResponse = await page.goto('http://localhost:8000/api/docs/', { waitUntil: 'networkidle' });
+            if (!docsResponse.ok()) {
+              throw new Error('API documentation is not accessible');
+            }
+            console.log('✓ API documentation loads');
+
+            // Test 4: Register page exists
+            console.log('\nTest 4: Checking register page...');
+            await page.goto('http://localhost/register', { waitUntil: 'networkidle' });
+            const registerButton = await page.$('button:has-text("Register")');
+            if (!registerButton) {
+              throw new Error('Register page does not have register button');
+            }
+            console.log('✓ Register page loads correctly');
+
+            // Test 5: Login page exists
+            console.log('\nTest 5: Checking login page...');
+            await page.goto('http://localhost/login', { waitUntil: 'networkidle' });
+            const loginButton = await page.$('button:has-text("Login")');
+            if (!loginButton) {
+              throw new Error('Login page does not have login button');
+            }
+            console.log('✓ Login page loads correctly');
+
+            console.log('\n========================================');
+            console.log('All E2E tests passed! ✓');
+            console.log('========================================');
+
+          } catch (error) {
+            console.error('\n========================================');
+            console.error('E2E test failed:', error.message);
+            console.error('========================================');
+            await page.screenshot({ path: 'e2e-failure.png' });
+            process.exit(1);
+          } finally {
+            await browser.close();
+          }
+        })();
+        EOF
+
+    - name: Run E2E tests
+      run: |
+        cd e2e-tests
+        node test.spec.js
+
+    - name: Upload failure screenshots
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: e2e-failure-screenshots
+        path: e2e-tests/*.png
+
+    - name: Show logs on failure
+      if: failure()
+      run: |
+        echo "=== Backend logs ==="
+        docker-compose logs backend
+        echo "=== Database logs ==="
+        docker-compose logs db
+        echo "=== Web logs ==="
+        docker-compose logs web
+
+    - name: Stop services
+      if: always()
+      run: docker-compose down -v

@@ -1,5 +1,10 @@
 # Euro Bakshish - Ride Sharing Application
 
+![Backend Tests](https://github.com/b-marinov/euro_bakshish/workflows/Backend%20Unit%20Tests/badge.svg)
+![Frontend Tests](https://github.com/b-marinov/euro_bakshish/workflows/Frontend%20Unit%20Tests/badge.svg)
+![Docker Tests](https://github.com/b-marinov/euro_bakshish/workflows/Docker%20Build%20and%20Test/badge.svg)
+![E2E Tests](https://github.com/b-marinov/euro_bakshish/workflows/End-to-End%20Tests/badge.svg)
+
 A comprehensive ride-sharing platform with web and Android applications.
 
 ## Features
@@ -129,11 +134,38 @@ API documentation is available at `/api/docs/` when running the backend server.
 ## Documentation
 
 - **[Docker Guide](docs/DOCKER.md)**: Complete Docker setup and commands
+- **[CI/CD Pipeline](docs/CI_CD.md)**: Continuous integration and testing
 - **[Setup Guide](docs/SETUP.md)**: Manual installation instructions
 - **[API Documentation](docs/API.md)**: API endpoints reference
 - **[Architecture](docs/ARCHITECTURE.md)**: System architecture overview
 - **[Security](docs/SECURITY.md)**: Security best practices
 - **[Contributing](CONTRIBUTING.md)**: How to contribute
+
+## Testing
+
+The project includes comprehensive automated testing:
+
+- **Unit Tests**: Backend (pytest) and frontend (Jest/React Testing Library)
+- **Integration Tests**: Docker Compose validation and service connectivity
+- **E2E Tests**: End-to-end browser testing with Playwright
+- **CI/CD**: Automated testing on every push and pull request
+
+Run tests locally:
+```bash
+# Backend tests
+make test
+
+# Frontend tests
+cd web && npm test
+
+# Docker tests
+make up && docker-compose exec backend pytest
+
+# All tests
+make test-all
+```
+
+See [CI/CD documentation](docs/CI_CD.md) for detailed testing information.
 
 ## Contributing
 

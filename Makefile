@@ -28,6 +28,7 @@ help:
 	@echo "Testing Commands:"
 	@echo "  make test        - Run backend tests"
 	@echo "  make test-web    - Run web frontend tests"
+	@echo "  make test-all    - Run all tests (backend, db, health checks)"
 	@echo ""
 	@echo "Utility Commands:"
 	@echo "  make shell       - Open Django shell"
@@ -104,6 +105,18 @@ test-web:
 
 test-coverage:
 	docker-compose exec backend pytest --cov=apps --cov-report=html
+
+test-all:
+	@echo "Running all tests..."
+	@echo "1. Backend tests with coverage..."
+	docker-compose exec backend pytest --cov=apps --cov-report=term
+	@echo "\n2. Database connectivity test..."
+	docker-compose exec db psql -U postgres -d euro_bakshish -c "SELECT 1;"
+	@echo "\n3. Backend API health check..."
+	curl -f http://localhost:8000/api/ || echo "Backend API check failed"
+	@echo "\n4. Frontend health check..."
+	curl -f http://localhost/ || echo "Frontend check failed"
+	@echo "\nAll tests completed!"
 
 # Utility Commands
 shell:

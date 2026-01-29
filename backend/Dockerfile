@@ -22,11 +22,14 @@ RUN apt-get update && apt-get install -y \
 COPY requirements.txt /app/
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
-# Copy project
+# Copy entrypoint script first and ensure it has correct permissions and line endings
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh && \
+    # Remove any potential Windows line endings
+    sed -i 's/\r$//' /app/entrypoint.sh
+
+# Copy rest of project
 COPY . /app/
 
-# Make entrypoint executable
-RUN chmod +x /app/entrypoint.sh
-
-# Run entrypoint script
-ENTRYPOINT ["/app/entrypoint.sh"]
+# Run entrypoint script with explicit bash interpreter
+ENTRYPOINT ["/bin/bash", "/app/entrypoint.sh"]

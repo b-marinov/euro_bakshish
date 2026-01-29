@@ -8,6 +8,23 @@ Get the entire application running in under 2 minutes!
 
 That's it! No need to install Python, Node.js, PostgreSQL, or any other dependencies.
 
+### 🪟 Windows Users - Important!
+
+If you're on Windows, Git may have converted line endings when cloning. To ensure proper line endings for shell scripts:
+
+```bash
+# Option 1: Configure Git before cloning (recommended)
+git config --global core.autocrlf input
+git clone https://github.com/b-marinov/euro_bakshish.git
+cd euro_bakshish
+
+# Option 2: If already cloned, rebuild without cache
+docker-compose build --no-cache
+docker-compose up -d
+```
+
+The repository now includes a `.gitattributes` file that enforces correct line endings, but if you cloned before this fix, use Option 2.
+
 ## Start the Application
 
 ### Step 1: Clone the Repository
@@ -84,6 +101,23 @@ make test         # Run tests
 ```
 
 ## Troubleshooting
+
+### 🪟 Windows: "entrypoint.sh not found" error?
+
+This is usually caused by Windows line ending issues. Try:
+
+```bash
+# Rebuild without cache to fix line endings
+docker-compose down
+docker-compose build --no-cache backend
+docker-compose up -d
+
+# Or if that doesn't work, ensure Git is configured correctly
+git config core.autocrlf input
+# Then re-clone the repository
+```
+
+The Dockerfile now automatically converts line endings, but if you cloned before the fix, rebuild is necessary.
 
 ### Services won't start?
 

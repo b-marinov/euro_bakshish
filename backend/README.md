@@ -23,6 +23,24 @@ The Docker setup automatically:
 - Creates an admin superuser (admin/admin123)
 - Starts the Django development server
 
+### 🪟 Windows Users
+
+If you encounter an "entrypoint.sh not found" error on Windows:
+
+```bash
+# From the project root, rebuild without cache
+docker-compose down
+docker-compose build --no-cache backend
+docker-compose up -d
+```
+
+This error occurs when Git converts Unix line endings (LF) to Windows line endings (CRLF). The Dockerfile now automatically handles this, but if you cloned before this fix, a rebuild is necessary.
+
+To prevent this issue in the future:
+```bash
+git config --global core.autocrlf input
+```
+
 ## Manual Setup
 
 ```bash

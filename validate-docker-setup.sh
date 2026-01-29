@@ -116,23 +116,43 @@ else
     check_pass "No conflicting command directive found"
 fi
 
-# 8. Check ports are available
+# 8. Check ports are available (informational only)
 echo ""
 echo "8. Checking port availability..."
 check_port() {
     PORT=$1
-    if lsof -Pi :$PORT -sTCP:LISTEN -t >/dev/null 2>&1 || netstat -ano 2>/dev/null | grep -q ":$PORT.*LISTEN"; then
-        check_warn "Port $PORT is already in use"
-        return 1
+    # Try multiple methods for cross-platform compatibility
+    if command -v lsof >/dev/null 2>&1; then
+        # Unix/Linux/Mac using lsof
+        if lsof -Pi :$PORT -sTCP:LISTEN -t >/dev/null 2>&1; then
+            check_warn "Port $PORT may be in use"
+            return 1
+        fi
+    elif command -v netstat >/dev/null 2>&1; then
+        # Try netstat (works on most systems)
+        if netstat -tuln 2>/dev/null | grep -q ":$PORT "; then
+            check_warn "Port $PORT may be in use"
+            return 1
+        fi
+    elif command -v ss >/dev/null 2>&1; then
+        # Modern Linux using ss
+        if ss -tuln 2>/dev/null | grep -q ":$PORT "; then
+            check_warn "Port $PORT may be in use"
+            return 1
+        fi
     else
-        check_pass "Port $PORT is available"
+        # No port checking tool available
+        check_warn "Cannot verify port $PORT availability (no lsof/netstat/ss found)"
         return 0
     fi
+    check_pass "Port $PORT appears available"
+    return 0
 }
 
-check_port 5432 || echo "   PostgreSQL may have conflicts"
-check_port 8000 || echo "   Backend may have conflicts"
-check_port 80 || echo "   Frontend may have conflicts"
+echo "   Note: Port checks are informational. Docker will report errors if ports are unavailable."
+check_port 5432 || echo "   → PostgreSQL port may conflict"
+check_port 8000 || echo "   → Backend API port may conflict"
+check_port 80 || echo "   → Frontend port may conflict (often requires elevated privileges)"
 
 # 9. Check Docker daemon is running
 echo ""

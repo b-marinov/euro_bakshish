@@ -1,0 +1,31 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  # Run all tests in parallel
+  backend-tests:
+    uses: ./.github/workflows/backend-tests.yml
+
+  frontend-tests:
+    uses: ./.github/workflows/frontend-tests.yml
+
+  docker-tests:
+    uses: ./.github/workflows/docker-tests.yml
+
+  # Run E2E tests after unit tests pass
+  e2e-tests:
+    needs: [backend-tests, frontend-tests]
+    uses: ./.github/workflows/e2e-tests.yml
+
+  # Summary job
+  ci-success:
+    needs: [backend-tests, frontend-tests, docker-tests, e2e-tests]
+    runs-on: ubuntu-latest
+    steps:
+      - name: All tests passed
+        run: echo "All CI tests passed successfully! ✓"

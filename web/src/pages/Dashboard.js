@@ -14,10 +14,18 @@ const Dashboard = () => {
     dispatch(fetchMyTrips());
   }, [dispatch]);
 
+  if (!user) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" minHeight="60vh">
+        <Typography>Loading...</Typography>
+      </Box>
+    );
+  }
+
   return (
     <Box>
       <Typography variant="h4" gutterBottom>
-        Welcome, {user?.first_name || user?.username}!
+        Welcome, {user.first_name || user.username}!
       </Typography>
       
       <Grid container spacing={3} sx={{ mt: 2 }}>

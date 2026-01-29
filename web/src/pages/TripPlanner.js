@@ -139,7 +139,7 @@ const TripPlanner = () => {
             margin="normal"
             value={formData.number_of_passengers}
             onChange={handleChange}
-            inputProps={{ min: 1 }}
+            inputProps={{ min: 1, max: 8 }}
             required
           />
           <TextField

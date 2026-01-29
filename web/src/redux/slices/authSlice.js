@@ -5,7 +5,7 @@ export const login = createAsyncThunk(
   'auth/login',
   async ({ username, password }, { rejectWithValue }) => {
     try {
-      const data = await authService.login(username, password);
+      await authService.login(username, password);
       const user = await authService.getCurrentUser();
       return user;
     } catch (error) {

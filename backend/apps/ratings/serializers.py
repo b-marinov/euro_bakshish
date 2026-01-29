@@ -79,9 +79,9 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
 class UserReviewSummarySerializer(serializers.Serializer):
     """Serializer for user review summary statistics"""
     user_id = serializers.IntegerField()
-    username = serializers.CharField()
+    username = serializers.CharField(required=False, allow_null=True)
     total_reviews = serializers.IntegerField()
-    average_rating = serializers.DecimalField(max_digits=3, decimal_places=2)
+    average_rating = serializers.DecimalField(max_digits=3, decimal_places=2, allow_null=True)
     five_star_count = serializers.IntegerField()
     four_star_count = serializers.IntegerField()
     three_star_count = serializers.IntegerField()

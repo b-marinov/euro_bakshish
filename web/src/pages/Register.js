@@ -42,7 +42,27 @@ const Register = () => {
       setSuccess(true);
       setTimeout(() => navigate('/login'), 2000);
     } catch (err) {
-      setError(err.response?.data?.detail || 'Registration failed. Please try again.');
+      // Display specific error messages from backend
+      const errorData = err.response?.data;
+      let errorMessage = 'Registration failed. Please try again.';
+      
+      if (errorData) {
+        if (typeof errorData === 'string') {
+          errorMessage = errorData;
+        } else if (errorData.detail) {
+          errorMessage = errorData.detail;
+        } else {
+          // Handle field-specific errors
+          const fieldErrors = Object.entries(errorData)
+            .map(([field, errors]) => `${field}: ${Array.isArray(errors) ? errors.join(', ') : errors}`)
+            .join('; ');
+          if (fieldErrors) {
+            errorMessage = fieldErrors;
+          }
+        }
+      }
+      
+      setError(errorMessage);
     }
   };
 

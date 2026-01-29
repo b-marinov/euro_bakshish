@@ -26,6 +26,12 @@ const TripHistory = () => {
         return 'success';
       case 'cancelled':
         return 'error';
+      case 'in_progress':
+        return 'info';
+      case 'accepted':
+        return 'primary';
+      case 'pending':
+        return 'warning';
       default:
         return 'default';
     }

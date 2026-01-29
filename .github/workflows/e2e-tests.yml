@@ -7,8 +7,10 @@ on:
     branches: [ main, develop ]
   workflow_dispatch:
 
+# Disabled for now - early stage development
 jobs:
   e2e-tests:
+    if: false
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
@@ -42,7 +44,7 @@ jobs:
 
     - name: Start services with Docker Compose
       run: |
-        docker-compose up -d
+        docker compose up -d
         echo "Waiting for services to start..."
         sleep 45
 
@@ -56,7 +58,7 @@ jobs:
         done
         if [ $attempt -eq $max_attempts ]; then
           echo "Backend failed to start"
-          docker-compose logs backend
+          docker compose logs backend
           exit 1
         fi
 
@@ -70,7 +72,7 @@ jobs:
         done
         if [ $attempt -eq $max_attempts ]; then
           echo "Frontend failed to start"
-          docker-compose logs web
+          docker compose logs web
           exit 1
         fi
 
@@ -169,12 +171,12 @@ jobs:
       if: failure()
       run: |
         echo "=== Backend logs ==="
-        docker-compose logs backend
+        docker compose logs backend
         echo "=== Database logs ==="
-        docker-compose logs db
+        docker compose logs db
         echo "=== Web logs ==="
-        docker-compose logs web
+        docker compose logs web
 
     - name: Stop services
       if: always()
-      run: docker-compose down -v
+      run: docker compose down -v

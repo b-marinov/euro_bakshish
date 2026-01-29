@@ -41,15 +41,34 @@ euro_bakshish/
 
 ## Getting Started
 
-### Prerequisites
+### Option 1: Docker (Recommended) 🐳
+
+**Fastest way to run the entire application:**
+
+```bash
+# Start all services (backend, frontend, database)
+docker-compose up -d
+
+# Access the application
+# Web: http://localhost
+# API: http://localhost:8000/api/
+# Admin: http://localhost:8000/admin/ (admin/admin123)
+```
+
+For more Docker commands and options, see [docs/DOCKER.md](docs/DOCKER.md) or run:
+```bash
+make help
+```
+
+### Option 2: Manual Setup
+
+#### Prerequisites
 - Python 3.10+
 - Node.js 18+
 - Android Studio (for Android development)
 - PostgreSQL
 
-### Quick Setup
-
-See [docs/SETUP.md](docs/SETUP.md) for detailed setup instructions.
+See [docs/SETUP.md](docs/SETUP.md) for detailed manual setup instructions.
 
 ### Security
 
@@ -62,7 +81,22 @@ Key security considerations:
 - Configure CORS properly
 - Keep dependencies updated
 
-### Backend Setup
+## Quick Commands
+
+### Using Docker (Recommended)
+
+```bash
+make up          # Start all services
+make down        # Stop all services
+make logs        # View logs
+make dev         # Start with hot reload (development)
+make migrate     # Run database migrations
+make test        # Run tests
+```
+
+### Manual Setup
+
+#### Backend Setup
 
 ```bash
 cd backend
@@ -91,6 +125,15 @@ npm start
 ## API Documentation
 
 API documentation is available at `/api/docs/` when running the backend server.
+
+## Documentation
+
+- **[Docker Guide](docs/DOCKER.md)**: Complete Docker setup and commands
+- **[Setup Guide](docs/SETUP.md)**: Manual installation instructions
+- **[API Documentation](docs/API.md)**: API endpoints reference
+- **[Architecture](docs/ARCHITECTURE.md)**: System architecture overview
+- **[Security](docs/SECURITY.md)**: Security best practices
+- **[Contributing](CONTRIBUTING.md)**: How to contribute
 
 ## Contributing
 

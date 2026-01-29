@@ -234,3 +234,8 @@ android/app/build/
 .idea/
 *.swp
 *.swo
+
+# Docker
+*.sql
+backup*.sql
+backup*.tar.gz

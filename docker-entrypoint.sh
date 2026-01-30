@@ -3,5 +3,13 @@ set -e
 
 echo "Starting Euro Bakshish application..."
 
-# Run the app using NextPy
-exec nextpy run --env prod --loglevel info --frontend-port 3000 --backend-port 8000
+# Initialize the NextPy app on first run if needed
+if [ ! -f ".web/package.json" ]; then
+    echo "Initializing NextPy application (first run)..."
+    # Accept blank template by piping echo
+    echo "" | nextpy init || true
+fi
+
+# Start the application
+echo "Running NextPy application..."
+exec nextpy run --env prod --loglevel info

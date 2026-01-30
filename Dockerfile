@@ -4,15 +4,16 @@ FROM python:3.11-slim
 # Set working directory
 WORKDIR /app
 
-# Install system dependencies including Node.js
+# Install system dependencies including Node.js and unzip
 RUN apt-get update && apt-get install -y \
     gcc \
     g++ \
     make \
     libpq-dev \
     curl \
+    unzip \
     && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
-    && apt-get install -y nodejs \
+    && apt-get install -y nodejs npm \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements first for better caching
@@ -40,6 +41,7 @@ EXPOSE 3000 8000
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
 ENV NODE_ENV=production
+ENV PATH="/usr/bin:$PATH"
 
 # Run the application using entrypoint script
 ENTRYPOINT ["./docker-entrypoint.sh"]

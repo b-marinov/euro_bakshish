@@ -4,43 +4,44 @@
 
 ```
 euro_bakshish/
-├── 📱 euro_bakshish_app.py     # Main NextPy Application
-│   ├── Database Models         # User, Trip, Review models
-│   ├── Application State       # State management
-│   ├── API Endpoints          # Automatically generated
-│   └── UI Components          # Login, Register, Dashboard, etc.
+├── 🗂️ backend/                  # Django REST Framework backend
+│   ├── apps/                    # Django applications
+│   │   ├── users/              # User management
+│   │   ├── trips/              # Trip management
+│   │   └── ratings/            # Rating system
+│   ├── euro_bakshish/          # Project settings
+│   ├── manage.py               # Django management script
+│   ├── requirements.txt        # Python dependencies
+│   └── Dockerfile              # Backend container
 │
-├── 📦 requirements-nextpy.txt  # Python dependencies
+├── 🗂️ web/                      # React frontend
+│   ├── src/                    # Source code
+│   │   ├── components/         # React components
+│   │   ├── redux/              # State management
+│   │   ├── services/           # API services
+│   │   └── pages/              # Page components
+│   ├── package.json            # Node dependencies
+│   └── Dockerfile              # Frontend container
 │
-├── 🗄️ euro_bakshish.db         # SQLite database (auto-created)
+├── 📦 docker-compose.yml        # Docker orchestration
 │
-├── 🗂️ backend/                 # Legacy Django backend (deprecated)
-├── 🗂️ web/                     # Legacy React frontend (deprecated)
-│
-└── 📚 docs/                    # Project documentation
-    ├── API.md                  # Legacy API documentation
-    ├── ARCHITECTURE.md         # Legacy architecture
-    ├── SETUP.md                # Legacy setup guide
-    └── SECURITY.md             # Security best practices
+└── 📚 docs/                     # Project documentation
+    ├── API.md                   # API documentation
+    ├── ARCHITECTURE.md          # System architecture
+    ├── SETUP.md                 # Setup guide
+    ├── DOCKER.md                # Docker guide
+    └── SECURITY.md              # Security practices
 ```
 
-## 🎯 Architecture Changes
+## 🎯 Architecture
 
-### Previous Architecture (Deprecated)
+### Current Architecture
 - **Backend**: Django REST Framework (Python)
 - **Frontend**: React + Redux (JavaScript/TypeScript)
-- **Android**: Kotlin (Mobile)
 - **Database**: PostgreSQL
 - **Authentication**: JWT tokens
-- **Complexity**: 3 separate codebases, multiple languages, complex deployment
-
-### New Architecture (NextPy-based)
-- **Full Stack**: NextPy (Pure Python)
-- **Frontend**: React components via Python (no JavaScript!)
-- **Backend**: FastAPI (built into NextPy)
-- **Database**: SQLModel (SQLite/PostgreSQL)
-- **Authentication**: Built-in session management
-- **Complexity**: Single codebase, single language, simple deployment
+- **API**: RESTful with OpenAPI/Swagger documentation
+- **Deployment**: Docker containers orchestrated with Docker Compose
 
 ## 🎯 Core Features
 
@@ -66,37 +67,46 @@ euro_bakshish/
 
 ## 🔧 Technology Stack
 
-### Current Stack (NextPy)
-- **NextPy**: Pure Python full-stack framework
-- **SQLModel**: SQL database ORM (built on SQLAlchemy + Pydantic)
-- **FastAPI**: High-performance API (built into NextPy)
-- **React**: UI rendering (via NextPy, no JS needed)
-- **SQLite/PostgreSQL**: Database options
-
-### Benefits of NextPy
-- **Single Language**: Everything in Python - no context switching
-- **Unified Codebase**: Frontend and backend in one file
-- **Type Safety**: Pydantic models ensure data validation
-- **Auto-Generated API**: REST API created automatically
-- **Hot Reload**: Fast development with instant updates
-- **Easy Deployment**: Single Python app to deploy
-- **AI-Ready**: Built-in support for AI/LLM integration
+- **Django**: Python web framework
+- **Django REST Framework**: RESTful API toolkit
+- **PostgreSQL**: Relational database
+- **React**: Frontend UI library
+- **Redux**: State management
+- **Docker**: Containerization
+- **Nginx**: Reverse proxy (in production)
 
 ## 🚀 Quick Start
 
-### Running the Application
+### Using Docker (Recommended)
 
 ```bash
-# Install dependencies
-pip install -r requirements-nextpy.txt
+# Start all services
+docker compose up -d
 
-# Run the application
-python euro_bakshish_app.py
-
-# Access at http://localhost:3000
+# Access at:
+# - Web: http://localhost
+# - API: http://localhost:8000/api/
+# - Admin: http://localhost:8000/admin/
 ```
 
-That's it! The database is automatically created, and both frontend and backend are running.
+### Manual Setup
+
+**Backend:**
+```bash
+cd backend
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py runserver
+```
+
+**Frontend:**
+```bash
+cd web
+npm install
+npm start
+```
 
 ## 📊 Core Features
 
@@ -141,10 +151,9 @@ All UI is built with Python - no JavaScript required!
 Key security features:
 - JWT token authentication
 - Password hashing (PBKDF2)
-- Required SECRET_KEY via environment variable
-- DEBUG defaults to False
 - CORS configuration
 - Input validation
+- SQL injection protection
 
 ## 📖 Documentation
 
@@ -162,7 +171,7 @@ Key security features:
 cd backend
 pytest
 
-# Web tests
+# Frontend tests
 cd web
 npm test
 ```
@@ -177,12 +186,12 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines
 
 ## 👥 Project Status
 
-✅ **Complete** - All core features implemented
+✅ **Active** - Django + React stack
 - User registration and authentication
 - Trip creation and management
 - Rating and review system
 - Trip history tracking
-- Multi-platform support (Web + Android)
+- Web interface
 
 ---
 

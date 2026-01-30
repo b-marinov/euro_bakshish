@@ -44,19 +44,12 @@ Follow the setup guide in `docs/SETUP.md`
 - Write unit tests for new features
 - Keep functions focused and small
 
-**JavaScript/React (Web)**
+**JavaScript/React (Frontend)**
 - Use ES6+ syntax
 - Follow Airbnb JavaScript Style Guide
 - Use functional components with hooks
 - Add PropTypes or TypeScript types
 - Write meaningful component names
-
-**Kotlin (Android)**
-- Follow Kotlin coding conventions
-- Use meaningful class and variable names
-- Add KDoc comments for public APIs
-- Follow MVVM architecture pattern
-- Use coroutines for async operations
 
 #### Git Workflow
 
@@ -111,10 +104,17 @@ cd backend
 pytest
 ```
 
-**Web Tests**
+**Frontend Tests**
 ```bash
 cd web
 npm test
+```
+
+**Docker Tests**
+```bash
+# Run via GitHub Actions or locally
+docker compose up -d
+# Tests run automatically in CI/CD
 ```
 
 **Coverage**

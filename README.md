@@ -5,7 +5,7 @@
 ![Docker Tests](https://github.com/b-marinov/euro_bakshish/workflows/Docker%20Build%20and%20Test/badge.svg)
 ![E2E Tests](https://github.com/b-marinov/euro_bakshish/workflows/End-to-End%20Tests/badge.svg)
 
-A comprehensive ride-sharing platform built with **NextPy** - a pure Python full-stack framework that handles both backend and frontend in a single, unified codebase.
+A comprehensive ride-sharing platform built with Django REST Framework backend and React frontend.
 
 ## Features
 
@@ -19,113 +19,111 @@ A comprehensive ride-sharing platform built with **NextPy** - a pure Python full
 
 ```
 euro_bakshish/
-├── euro_bakshish_app.py   # Main NextPy application (frontend + backend)
-├── requirements-nextpy.txt # Python dependencies
-├── backend/                # Legacy Django backend (deprecated)
-├── web/                    # Legacy React frontend (deprecated)
+├── backend/                # Django REST Framework backend
+├── web/                    # React frontend
+├── docker-compose.yml      # Docker orchestration
 └── docs/                   # Project documentation
 ```
 
-**Note:** The application has been refactored to use NextPy framework, replacing the previous Django + React + Android stack with a unified Python application.
-
 ## Technology Stack
 
-### Current (NextPy-based)
-- **Framework**: NextPy - Pure Python full-stack framework
-- **Backend**: FastAPI (built into NextPy)
-- **Frontend**: React components via NextPy (no JavaScript needed!)
-- **Database**: SQLModel with SQLite/PostgreSQL support
-- **State Management**: Built-in NextPy state management
-- **Authentication**: Session-based authentication
-
-### Legacy (Deprecated)
-- Backend: Django 4.x with Django REST Framework
-- Web Frontend: React 18.x with Redux
-- Android: Kotlin MVVM architecture
+- **Backend**: Django 4.x with Django REST Framework
+- **Frontend**: React 18.x with Redux
+- **Database**: PostgreSQL
+- **Authentication**: JWT tokens
+- **API**: RESTful API with Swagger/OpenAPI documentation
 
 ## Getting Started
 
-### Quick Start (Recommended) 🚀
-
-**Run the NextPy application:**
+### Quick Start with Docker (Recommended) 🚀
 
 ```bash
-# Install dependencies
-pip install -r requirements-nextpy.txt
-
-# Run the application
-python euro_bakshish_app.py
+# Start all services
+docker compose up -d
 
 # Access the application
-# Web: http://localhost:3000
+# Web: http://localhost
 # API: http://localhost:8000/api/
+# API Docs: http://localhost:8000/api/docs/
+# Admin: http://localhost:8000/admin/
 ```
 
 ### Prerequisites
-- Python 3.10+
-- pip (Python package manager)
-
-**Note**: Write everything in Python - NextPy handles the JavaScript/React generation automatically under the hood. You develop in pure Python!
+- Docker and Docker Compose
+- OR: Python 3.10+, Node.js 16+, PostgreSQL
 
 ### Security
 
-⚠️ **Security Improvements**: The NextPy application now uses proper password hashing with bcrypt. See [docs/SECURITY.md](docs/SECURITY.md) before deploying to production.
+⚠️ **Important**: See [docs/SECURITY.md](docs/SECURITY.md) before deploying to production.
 
 Key security features:
-- ✅ Secure password hashing (bcrypt)
-- ✅ Session-based authentication
+- ✅ JWT token-based authentication
+- ✅ Secure password hashing (PBKDF2)
+- ✅ CORS configuration
 - ⚠️ Requires HTTPS in production
-- ⚠️ Configure database properly for production
 - ⚠️ Keep dependencies updated
 
 ## Quick Commands
 
-### Running the Application
+### Running with Docker
 
 ```bash
-# Development mode with hot reload
-python euro_bakshish_app.py
+# Start services
+docker compose up -d
 
-# Production mode
-nextpy run --env prod
+# Stop services
+docker compose down
+
+# View logs
+docker compose logs -f
+
+# Rebuild containers
+docker compose build --no-cache
 ```
 
-### Database Management
+### Manual Development Setup
 
+**Backend:**
 ```bash
-# Initialize database
-python -c "from euro_bakshish_app import init_db; init_db()"
-
-# The database is automatically created when you run the app for the first time
+cd backend
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py runserver
 ```
 
-### Legacy Setup (Deprecated)
-
-The old Django backend and React frontend are still available in the `backend/` and `web/` directories but are no longer maintained. Refer to the git history or legacy documentation if needed.
+**Frontend:**
+```bash
+cd web
+npm install
+npm start
+```
 
 ## API Documentation
 
-The NextPy application provides a unified API that's automatically generated and documented.
+The Django REST Framework backend provides a comprehensive RESTful API.
 
 ### Interactive API Documentation
 When the application is running, access:
-- **Swagger UI**: `http://localhost:8000/docs/`
-- **ReDoc**: `http://localhost:8000/redoc/`
+- **Swagger UI**: `http://localhost:8000/api/docs/`
+- **Browsable API**: `http://localhost:8000/api/`
 
 ### Key Endpoints
 
-All API endpoints are automatically generated by NextPy based on the application state and models:
+- **Authentication**: 
+  - `POST /api/users/token/` - Login (get JWT tokens)
+  - `POST /api/users/` - Register
+- **Users**: 
+  - `GET /api/users/me/` - Get current user profile
+- **Trips**: 
+  - `POST /api/trips/` - Create trip
+  - `GET /api/trips/my_trips/` - Get my trips
+  - `GET /api/trips/available_trips/` - Get available trips
+- **Reviews**: 
+  - `POST /api/ratings/reviews/` - Create review
 
-- **Authentication**: Login/Register/Logout
-- **Users**: Profile management
-- **Trips**: Create, view, accept, and manage trips
-- **Reviews**: Rate and review completed trips
-
-### Quick API Test
-```bash
-# The NextPy framework handles all API routing automatically
-# Test by using the web interface or the auto-generated API docs
-```
+See [docs/API.md](docs/API.md) for complete API documentation.
 
 ## Documentation
 
@@ -139,16 +137,23 @@ All API endpoints are automatically generated by NextPy based on the application
 
 ## Testing
 
-The NextPy application includes built-in testing capabilities:
-
+### Backend Tests
 ```bash
-# Run tests
-python -m pytest tests/
-
-# The application uses NextPy's built-in testing framework
+cd backend
+pytest
 ```
 
-**Note:** The legacy test infrastructure for Django and React has been deprecated. New tests should be written for the NextPy application.
+### Frontend Tests
+```bash
+cd web
+npm test
+```
+
+### Docker Tests
+```bash
+# Tests are automatically run in CI/CD
+# See .github/workflows/ for test configurations
+```
 
 ## Contributing
 

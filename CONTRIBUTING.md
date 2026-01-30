@@ -33,23 +33,21 @@ Thank you for your interest in contributing to Euro Bakshish! This document prov
 
 #### Setup Development Environment
 
-Follow the setup guide in `docs/SETUP.md`
+1. Clone the repository
+2. Install dependencies: `pip install -r requirements-nextpy.txt`
+3. Run the application: `python euro_bakshish_app.py`
+
+Follow the setup guide in `QUICKSTART.md` for more details.
 
 #### Coding Standards
 
-**Python (Backend)**
+**Python (NextPy)**
 - Follow PEP 8 style guide
 - Use meaningful variable and function names
 - Add docstrings to classes and functions
 - Write unit tests for new features
 - Keep functions focused and small
-
-**JavaScript/React (Frontend)**
-- Use ES6+ syntax
-- Follow Airbnb JavaScript Style Guide
-- Use functional components with hooks
-- Add PropTypes or TypeScript types
-- Write meaningful component names
+- Use type hints for better code quality
 
 #### Git Workflow
 
@@ -98,23 +96,9 @@ Refactor dashboard component
 
 #### Testing
 
-**Backend Tests**
+**NextPy Application Tests**
 ```bash
-cd backend
-pytest
-```
-
-**Frontend Tests**
-```bash
-cd web
-npm test
-```
-
-**Docker Tests**
-```bash
-# Run via GitHub Actions or locally
-docker compose up -d
-# Tests run automatically in CI/CD
+python -m pytest tests/
 ```
 
 **Coverage**

@@ -1,3 +1,0 @@
-"""
-Euro Bakshish Django Application
-"""

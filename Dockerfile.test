@@ -1,0 +1,38 @@
+# Test Dockerfile
+FROM python:3.11-slim
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    make \
+    libpq-dev \
+    curl \
+    unzip \
+    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements
+COPY requirements-nextpy.txt requirements-dev.txt* ./
+
+# Install Python dependencies including test dependencies
+RUN pip install --no-cache-dir -r requirements-nextpy.txt && \
+    pip install --no-cache-dir pytest pytest-cov pytest-asyncio httpx && \
+    if [ -f requirements-dev.txt ]; then pip install --no-cache-dir -r requirements-dev.txt; fi
+
+# Copy application code
+COPY . .
+
+# Create directory structure
+RUN mkdir -p /app/data
+
+# Set environment variables
+ENV PYTHONUNBUFFERED=1
+ENV TESTING=1
+
+# Default command runs tests
+CMD ["pytest", "tests/", "-v", "--tb=short"]

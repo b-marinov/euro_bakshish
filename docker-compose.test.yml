@@ -1,0 +1,23 @@
+services:
+  # Test service
+  euro_bakshish_test:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    container_name: euro_bakshish_test
+    volumes:
+      - .:/app  # Mount codebase for testing
+      - /app/.web  # Exclude generated directories
+      - /app/.nextpy
+      - /app/__pycache__
+    environment:
+      - PYTHONUNBUFFERED=1
+      - DATABASE_URL=sqlite:///./test_euro_bakshish.db
+      - TESTING=1
+    command: ["pytest", "tests/", "-v", "--tb=short", "--cov=.", "--cov-report=term-missing"]
+    networks:
+      - euro_bakshish_test_network
+
+networks:
+  euro_bakshish_test_network:
+    driver: bridge

@@ -1,0 +1,30 @@
+services:
+  # Development service with code mounted for hot-reload
+  euro_bakshish_dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: euro_bakshish_dev
+    ports:
+      - "3000:3000"  # Frontend
+      - "8000:8000"  # Backend API
+    volumes:
+      - .:/app  # Mount entire codebase for development
+      - /app/.web  # Exclude .web directory (generated)
+      - /app/.nextpy  # Exclude .nextpy directory (generated)
+      - /app/__pycache__  # Exclude pycache
+      - dev_data:/app/data  # Persist database separately
+    environment:
+      - PYTHONUNBUFFERED=1
+      - DATABASE_URL=sqlite:///./data/euro_bakshish.db
+      - NODE_ENV=development
+    command: ["nextpy", "run", "--loglevel", "debug"]
+    networks:
+      - euro_bakshish_dev_network
+
+volumes:
+  dev_data:
+
+networks:
+  euro_bakshish_dev_network:
+    driver: bridge

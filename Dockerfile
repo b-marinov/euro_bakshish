@@ -30,7 +30,6 @@ RUN useradd -m -u 1000 appuser
 
 # Copy application code and config
 COPY euro_bakshish_app.py .
-COPY rxconfig.py .
 COPY docker-entrypoint.sh .
 
 # Make entrypoint executable
@@ -52,6 +51,10 @@ EXPOSE 3000 8000
 ENV PYTHONUNBUFFERED=1
 ENV NODE_ENV=production
 ENV DATABASE_URL=sqlite:///./data/euro_bakshish.db
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:8000/docs || exit 1
 
 # Run the application using entrypoint script
 ENTRYPOINT ["./docker-entrypoint.sh"]

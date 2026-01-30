@@ -5,7 +5,7 @@
 ![Docker Tests](https://github.com/b-marinov/euro_bakshish/workflows/Docker%20Build%20and%20Test/badge.svg)
 ![E2E Tests](https://github.com/b-marinov/euro_bakshish/workflows/End-to-End%20Tests/badge.svg)
 
-A comprehensive ride-sharing platform with web and Android applications.
+A comprehensive ride-sharing platform built with **NextPy** - a pure Python full-stack framework that handles both backend and frontend in a single, unified codebase.
 
 ## Features
 
@@ -19,149 +19,112 @@ A comprehensive ride-sharing platform with web and Android applications.
 
 ```
 euro_bakshish/
-├── backend/          # Django REST API backend
-├── web/              # React web frontend
-├── android/          # Android application
-└── docs/             # Project documentation
+├── euro_bakshish_app.py   # Main NextPy application (frontend + backend)
+├── requirements-nextpy.txt # Python dependencies
+├── backend/                # Legacy Django backend (deprecated)
+├── web/                    # Legacy React frontend (deprecated)
+└── docs/                   # Project documentation
 ```
+
+**Note:** The application has been refactored to use NextPy framework, replacing the previous Django + React + Android stack with a unified Python application.
 
 ## Technology Stack
 
-### Backend
-- **Framework**: Django 4.x with Django REST Framework
-- **Database**: PostgreSQL
-- **Authentication**: JWT tokens
+### Current (NextPy-based)
+- **Framework**: NextPy - Pure Python full-stack framework
+- **Backend**: FastAPI (built into NextPy)
+- **Frontend**: React components via NextPy (no JavaScript needed!)
+- **Database**: SQLModel with SQLite/PostgreSQL support
+- **State Management**: Built-in NextPy state management
+- **Authentication**: Session-based authentication
 
-### Web Frontend
-- **Framework**: React 18.x
-- **State Management**: Redux
-- **UI Library**: Material-UI
-- **Maps**: Google Maps API
-
-### Android
-- **Language**: Kotlin
-- **Architecture**: MVVM
-- **Networking**: Retrofit
-- **Maps**: Google Maps SDK
+### Legacy (Deprecated)
+- Backend: Django 4.x with Django REST Framework
+- Web Frontend: React 18.x with Redux
+- Android: Kotlin MVVM architecture
 
 ## Getting Started
 
-### Option 1: Docker (Recommended) 🐳
+### Quick Start (Recommended) 🚀
 
-**Fastest way to run the entire application:**
+**Run the NextPy application:**
 
 ```bash
-# Start all services (backend, frontend, database)
-docker-compose up -d
+# Install dependencies
+pip install -r requirements-nextpy.txt
+
+# Run the application
+python euro_bakshish_app.py
 
 # Access the application
-# Web: http://localhost
+# Web: http://localhost:3000
 # API: http://localhost:8000/api/
-# Admin: http://localhost:8000/admin/ (admin/admin123)
 ```
 
-For more Docker commands and options, see [docs/DOCKER.md](docs/DOCKER.md) or run:
-```bash
-make help
-```
-
-### Option 2: Manual Setup
-
-#### Prerequisites
+### Prerequisites
 - Python 3.10+
-- Node.js 18+
-- Android Studio (for Android development)
-- PostgreSQL
+- pip (Python package manager)
 
-See [docs/SETUP.md](docs/SETUP.md) for detailed manual setup instructions.
+**Note**: Write everything in Python - NextPy handles the JavaScript/React generation automatically under the hood. You develop in pure Python!
 
 ### Security
 
-⚠️ **Important**: Please review [docs/SECURITY.md](docs/SECURITY.md) before deploying to production.
+⚠️ **Security Improvements**: The NextPy application now uses proper password hashing with bcrypt. See [docs/SECURITY.md](docs/SECURITY.md) before deploying to production.
 
-Key security considerations:
-- Set SECRET_KEY via environment variable (required)
-- Use HTTPS in production
-- Review token storage mechanisms
-- Configure CORS properly
-- Keep dependencies updated
+Key security features:
+- ✅ Secure password hashing (bcrypt)
+- ✅ Session-based authentication
+- ⚠️ Requires HTTPS in production
+- ⚠️ Configure database properly for production
+- ⚠️ Keep dependencies updated
 
 ## Quick Commands
 
-### Using Docker (Recommended)
+### Running the Application
 
 ```bash
-make up          # Start all services
-make down        # Stop all services
-make logs        # View logs
-make dev         # Start with hot reload (development)
-make migrate     # Run database migrations
-make test        # Run tests
+# Development mode with hot reload
+python euro_bakshish_app.py
+
+# Production mode
+nextpy run --env prod
 ```
 
-### Manual Setup
-
-#### Backend Setup
+### Database Management
 
 ```bash
-cd backend
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-pip install -r requirements.txt
-python manage.py migrate
-python manage.py runserver
+# Initialize database
+python -c "from euro_bakshish_app import init_db; init_db()"
+
+# The database is automatically created when you run the app for the first time
 ```
 
-### Web Frontend Setup
+### Legacy Setup (Deprecated)
 
-```bash
-cd web
-npm install
-npm start
-```
-
-### Android Setup
-
-1. Open Android Studio
-2. Open the `android` directory as a project
-3. Sync Gradle files
-4. Run the application
+The old Django backend and React frontend are still available in the `backend/` and `web/` directories but are no longer maintained. Refer to the git history or legacy documentation if needed.
 
 ## API Documentation
 
-The API provides comprehensive interactive documentation:
+The NextPy application provides a unified API that's automatically generated and documented.
 
-### Interactive Swagger UI
-When the backend is running, access the interactive API documentation:
-- **URL**: `http://localhost:8000/api/docs/`
-- **Features**: 
-  - Try out API endpoints directly in the browser
-  - View request/response schemas
-  - Test authentication flows
-  - See example requests and responses
+### Interactive API Documentation
+When the application is running, access:
+- **Swagger UI**: `http://localhost:8000/docs/`
+- **ReDoc**: `http://localhost:8000/redoc/`
 
-### OpenAPI Schema
-Machine-readable API specification:
-- **URL**: `http://localhost:8000/api/schema/`
-- Import into Postman, Insomnia, or other API clients
+### Key Endpoints
 
-### Static Documentation
-Detailed API reference: [docs/API.md](docs/API.md)
-- Complete endpoint descriptions
-- Authentication guide
-- Example workflows
-- Error handling
+All API endpoints are automatically generated by NextPy based on the application state and models:
+
+- **Authentication**: Login/Register/Logout
+- **Users**: Profile management
+- **Trips**: Create, view, accept, and manage trips
+- **Reviews**: Rate and review completed trips
 
 ### Quick API Test
-Once the backend is running, test the API:
 ```bash
-# Get API root
-curl http://localhost:8000/api/
-
-# Create a user (example)
-curl -X POST http://localhost:8000/api/users/ \
-  -H "Content-Type: application/json" \
-  -d '{"username": "testuser", "email": "test@example.com", ...}'
+# The NextPy framework handles all API routing automatically
+# Test by using the web interface or the auto-generated API docs
 ```
 
 ## Documentation
@@ -176,29 +139,16 @@ curl -X POST http://localhost:8000/api/users/ \
 
 ## Testing
 
-The project includes comprehensive automated testing:
+The NextPy application includes built-in testing capabilities:
 
-- **Unit Tests**: Backend (pytest) and frontend (Jest/React Testing Library)
-- **Integration Tests**: Docker Compose validation and service connectivity
-- **E2E Tests**: End-to-end browser testing with Playwright
-- **CI/CD**: Automated testing on every push and pull request
-
-Run tests locally:
 ```bash
-# Backend tests
-make test
+# Run tests
+python -m pytest tests/
 
-# Frontend tests
-cd web && npm test
-
-# Docker tests
-make up && docker-compose exec backend pytest
-
-# All tests
-make test-all
+# The application uses NextPy's built-in testing framework
 ```
 
-See [CI/CD documentation](docs/CI_CD.md) for detailed testing information.
+**Note:** The legacy test infrastructure for Django and React has been deprecated. New tests should be written for the NextPy application.
 
 ## Contributing
 

@@ -238,3 +238,12 @@ android/app/build/
 *.sql
 backup*.sql
 backup*.tar.gz
+
+# NextPy generated files
+.web/
+.nextpy/
+euro_bakshish.db
+euro_bakshish.db-shm
+euro_bakshish.db-wal
+assets/
+rxconfig.py

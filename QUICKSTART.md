@@ -7,7 +7,7 @@ Get started with the Euro Bakshish ride-sharing application in minutes!
 - Python 3.10 or higher
 - pip (Python package manager)
 
-That's it! No Node.js, no Android Studio, no additional setup required.
+That's it! No Node.js, no Docker, no additional setup required.
 
 ## Installation
 
@@ -39,7 +39,7 @@ The application will:
 
 ### 1. Register a New User
 1. Go to http://localhost:3000
-2. Click "Register here"
+2. Click "Register"
 3. Fill in your details and user type
 4. Click "Register"
 

@@ -238,6 +238,7 @@ android/app/build/
 *.sql
 backup*.sql
 backup*.tar.gz
+data/
 
 # NextPy generated files
 .web/

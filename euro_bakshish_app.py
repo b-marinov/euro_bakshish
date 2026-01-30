@@ -470,4 +470,3 @@ app.add_page(dashboard, route="/dashboard", on_load=State.load_trips)
 # Initialize database
 init_db()
 
-# Note: Compile happens automatically when running the app

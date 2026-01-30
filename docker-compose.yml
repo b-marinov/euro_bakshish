@@ -1,6 +1,10 @@
+version: '3.8'
+
 services:
   euro_bakshish:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: euro_bakshish_app
     ports:
       - "3000:3000"  # Frontend
@@ -11,3 +15,16 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
       - DATABASE_URL=sqlite:///./data/euro_bakshish.db
+      - NODE_ENV=production
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/ping", "||", "exit", "1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - euro_bakshish_network
+
+networks:
+  euro_bakshish_network:
+    driver: bridge

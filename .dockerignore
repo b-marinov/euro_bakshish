@@ -14,11 +14,17 @@ __pycache__
 dist
 build
 .eggs
+.pytest_cache
+.mypy_cache
+.ruff_cache
+.coverage
+htmlcov/
 
 # Virtual environments
 venv
 env
 ENV
+.venv
 
 # IDE files
 .vscode
@@ -31,19 +37,41 @@ ENV
 *.db
 *.sqlite
 *.sqlite3
+*.db-shm
+*.db-wal
 
-# NextPy cache
+# NextPy generated files
 .web
+.nextpy
+assets/
 
 # Documentation
 *.md
 docs/
+!README.md
 
 # Temporary files
 *.log
 *.tmp
 .DS_Store
 
-# Test files
+# Test files (for production image)
 tests/
 *.test.py
+pytest.ini
+
+# Development files
+Dockerfile.dev
+Dockerfile.test
+docker-compose.dev.yml
+docker-compose.test.yml
+Makefile
+.pre-commit-config.yaml
+requirements-dev.txt
+
+# Data directory (mounted as volume)
+data/
+
+# Backup files
+backup*.sql
+backup*.tar.gz

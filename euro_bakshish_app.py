@@ -130,11 +130,16 @@ engine = create_engine(DATABASE_URL, echo=True)
 
 def init_db():
     """Initialize database tables"""
-    # Ensure the directory exists if database path includes a directory
-    db_path = DATABASE_URL.replace("sqlite:///", "")
-    db_dir = os.path.dirname(db_path)
-    if db_dir and not os.path.exists(db_dir):
-        os.makedirs(db_dir, exist_ok=True)
+    # Ensure the directory exists if using SQLite database
+    if DATABASE_URL.startswith("sqlite:"):
+        # Extract the file path from SQLite URL (handles sqlite:/// format)
+        db_path = DATABASE_URL.split("sqlite:///")[-1] if "sqlite:///" in DATABASE_URL else DATABASE_URL.split("sqlite://")[-1]
+        # Normalize the path and get directory
+        db_path = os.path.normpath(db_path)
+        db_dir = os.path.dirname(db_path)
+        # Create directory if it's not empty and not current directory
+        if db_dir and db_dir != ".":
+            os.makedirs(db_dir, exist_ok=True)
     SQLModel.metadata.create_all(engine)
 
 

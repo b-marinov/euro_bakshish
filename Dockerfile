@@ -54,7 +54,7 @@ ENV DATABASE_URL=sqlite:///./data/euro_bakshish.db
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-    CMD curl -f http://localhost:8000/ping || exit 1
+    CMD curl -f http://localhost:8000/docs || exit 1
 
 # Run the application using entrypoint script
 ENTRYPOINT ["./docker-entrypoint.sh"]

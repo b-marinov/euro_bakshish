@@ -45,10 +45,10 @@ ENV
 .nextpy
 assets/
 
-# Documentation
+# Documentation - include README.md
 *.md
-docs/
 !README.md
+docs/
 
 # Temporary files
 *.log

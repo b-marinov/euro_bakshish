@@ -229,7 +229,12 @@ This application implements security best practices:
 - ✅ SQL injection protection via SQLModel
 - ⚠️ **Production**: Use HTTPS and configure secrets properly
 
-See the [Security Guide](docs/SECURITY.md) for more details (if available).
+For production deployment, ensure you:
+- Use HTTPS with valid certificates
+- Store secrets securely (use environment variables)
+- Keep dependencies updated
+- Configure proper database backup
+- Enable security headers in reverse proxy
 
 ## 📚 Documentation
 

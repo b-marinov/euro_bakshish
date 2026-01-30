@@ -21,7 +21,7 @@ help:
 	@echo "Testing:"
 	@echo "  make test           - Run tests in Docker"
 	@echo "  make test-local     - Run tests locally (requires deps)"
-	@echo "  make test-watch     - Run tests in watch mode"
+	@echo "  make test-coverage  - Run tests with coverage report"
 	@echo ""
 	@echo "Code Quality:"
 	@echo "  make format         - Format code with black and isort"
@@ -71,9 +71,6 @@ test:
 test-local:
 	pytest tests/ -v
 
-test-watch:
-	pytest tests/ -v --watch
-
 test-coverage:
 	docker compose -f docker-compose.test.yml run --rm euro_bakshish_test \
 		pytest tests/ --cov=. --cov-report=html --cov-report=term
@@ -101,9 +98,9 @@ clean:
 	rm -rf .web .nextpy __pycache__ .pytest_cache .mypy_cache .coverage htmlcov
 	find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
 	find . -type f -name "*.pyc" -delete 2>/dev/null || true
-	find . -type f -name "*.db" -delete 2>/dev/null || true
-	find . -type f -name "*.db-shm" -delete 2>/dev/null || true
-	find . -type f -name "*.db-wal" -delete 2>/dev/null || true
+	# Only delete test databases, not data directory databases
+	rm -f test_*.db test_*.db-shm test_*.db-wal
+	rm -f euro_bakshish.db euro_bakshish.db-shm euro_bakshish.db-wal
 
 clean-all: clean
 	docker rmi euro_bakshish:latest euro_bakshish:dev euro_bakshish:test 2>/dev/null || true

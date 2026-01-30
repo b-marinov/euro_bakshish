@@ -15,7 +15,7 @@ services:
       - DATABASE_URL=sqlite:///./data/euro_bakshish.db
       - NODE_ENV=production
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/ping", "||", "exit", "1"]
+      test: ["CMD", "curl", "-f", "http://localhost:8000/docs", "||", "exit", "1"]
       interval: 30s
       timeout: 10s
       retries: 3

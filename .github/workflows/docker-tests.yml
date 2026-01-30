@@ -16,6 +16,9 @@ on:
       - '.dockerignore'
       - '.github/workflows/docker-tests.yml'
 
+permissions:
+  contents: read
+
 jobs:
   docker-validation:
     name: Validate Docker Configuration

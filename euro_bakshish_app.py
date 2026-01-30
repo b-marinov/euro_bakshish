@@ -124,12 +124,17 @@ class Review(SQLModel, table=True):
 
 # Database setup
 import os
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./data/euro_bakshish.db")
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./euro_bakshish.db")
 engine = create_engine(DATABASE_URL, echo=True)
 
 
 def init_db():
     """Initialize database tables"""
+    # Ensure the directory exists if database path includes a directory
+    db_path = DATABASE_URL.replace("sqlite:///", "")
+    db_dir = os.path.dirname(db_path)
+    if db_dir and not os.path.exists(db_dir):
+        os.makedirs(db_dir, exist_ok=True)
     SQLModel.metadata.create_all(engine)
 
 

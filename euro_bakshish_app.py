@@ -123,7 +123,8 @@ class Review(SQLModel, table=True):
 
 
 # Database setup
-DATABASE_URL = "sqlite:///./euro_bakshish.db"
+import os
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./data/euro_bakshish.db")
 engine = create_engine(DATABASE_URL, echo=True)
 
 

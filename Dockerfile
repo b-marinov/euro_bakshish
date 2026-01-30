@@ -13,14 +13,20 @@ RUN apt-get update && apt-get install -y \
     curl \
     unzip \
     && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
-    && apt-get install -y nodejs npm \
+    && apt-get install -y nodejs \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements first for better caching
 COPY requirements-nextpy.txt .
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements-nextpy.txt
+# Install Python dependencies and remove build tools to reduce image size
+RUN pip install --no-cache-dir -r requirements-nextpy.txt \
+    && apt-get purge -y gcc g++ make \
+    && apt-get autoremove -y \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create app user for security
+RUN useradd -m -u 1000 appuser
 
 # Copy application code and config
 COPY euro_bakshish_app.py .
@@ -31,7 +37,11 @@ COPY docker-entrypoint.sh .
 RUN chmod +x docker-entrypoint.sh
 
 # Create directory for database and .web structure
-RUN mkdir -p /app/data /app/.web /app/assets
+RUN mkdir -p /app/data /app/.web /app/assets \
+    && chown -R appuser:appuser /app
+
+# Switch to non-root user
+USER appuser
 
 # Expose ports
 # Port 3000 for frontend
@@ -41,7 +51,7 @@ EXPOSE 3000 8000
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
 ENV NODE_ENV=production
-ENV PATH="/usr/bin:$PATH"
+ENV DATABASE_URL=sqlite:///./data/euro_bakshish.db
 
 # Run the application using entrypoint script
 ENTRYPOINT ["./docker-entrypoint.sh"]

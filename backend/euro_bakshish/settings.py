@@ -147,9 +147,9 @@ SIMPLE_JWT = {
 # CORS Settings
 # Allow frontend origins for local development
 CORS_ALLOWED_ORIGINS = [
-    origin.strip() 
+    origin.strip()
     for origin in config(
-        'CORS_ALLOWED_ORIGINS', 
+        'CORS_ALLOWED_ORIGINS',
         default='http://localhost,http://localhost:3000,http://127.0.0.1,http://127.0.0.1:3000'
     ).split(',')
 ]

@@ -22,9 +22,9 @@ RUN apt-get update && apt-get install -y \
 COPY requirements.txt /app/
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
-# Copy entrypoint script first and ensure it has correct line endings
+# Copy entrypoint script first and ensure it has correct line endings and is executable
 COPY entrypoint.sh /app/entrypoint.sh
-RUN sed -i 's/\r$//' /app/entrypoint.sh
+RUN sed -i 's/\r$//' /app/entrypoint.sh && chmod +x /app/entrypoint.sh
 
 # Copy rest of project
 COPY . /app/

@@ -1,0 +1,13 @@
+services:
+  euro_bakshish:
+    build: .
+    container_name: euro_bakshish_app
+    ports:
+      - "3000:3000"  # Frontend
+      - "8000:8000"  # Backend API
+    volumes:
+      - ./data:/app/data  # Persist database
+    restart: unless-stopped
+    environment:
+      - PYTHONUNBUFFERED=1
+      - DATABASE_URL=sqlite:///./data/euro_bakshish.db

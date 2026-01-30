@@ -1,0 +1,49 @@
+# Git files
+.git
+.gitignore
+.gitattributes
+.github
+
+# Python cache
+__pycache__
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info
+dist
+build
+.eggs
+
+# Virtual environments
+venv
+env
+ENV
+
+# IDE files
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# Database files (will be created in container)
+*.db
+*.sqlite
+*.sqlite3
+
+# NextPy cache
+.web
+
+# Documentation
+*.md
+docs/
+
+# Temporary files
+*.log
+*.tmp
+.DS_Store
+
+# Test files
+tests/
+*.test.py

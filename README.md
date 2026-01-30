@@ -34,6 +34,8 @@ euro_bakshish/
 
 ### Quick Start (Recommended) 🚀
 
+#### Option 1: Local Development
+
 ```bash
 # Install dependencies
 pip install -r requirements-nextpy.txt
@@ -46,9 +48,59 @@ python euro_bakshish_app.py
 # API: http://localhost:8000/api/
 ```
 
+#### Option 2: Docker Deployment 🐳
+
+##### Using Docker Compose (Recommended)
+
+```bash
+# Build and start the container
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop the container
+docker-compose down
+```
+
+##### Using Docker directly
+
+```bash
+# Build the Docker image
+docker build -t euro_bakshish .
+
+# Run the container
+docker run -d \
+  --name euro_bakshish_app \
+  -p 3000:3000 \
+  -p 8000:8000 \
+  -v $(pwd)/data:/app/data \
+  euro_bakshish
+
+# View logs
+docker logs -f euro_bakshish_app
+
+# Stop the container
+docker stop euro_bakshish_app
+docker rm euro_bakshish_app
+```
+
+**Access the application:**
+- Web Interface: http://localhost:3000
+- API Documentation: http://localhost:8000/docs
+- Backend API: http://localhost:8000/api/
+
+**For nginx reverse proxy:** Configure nginx to proxy requests to `http://localhost:3000` (frontend) and `http://localhost:8000` (backend API).
+
 ### Prerequisites
+
+#### Local Development
 - Python 3.10+
 - pip (Python package manager)
+
+#### Docker Deployment
+- Docker
+- Docker Compose (optional, for easier management)
 
 **Note**: Write everything in Python - NextPy handles the JavaScript/React generation automatically!
 

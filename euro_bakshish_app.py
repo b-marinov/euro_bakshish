@@ -152,7 +152,7 @@ class State(xt.State):
     start_lon: float = 0.0
     end_lat: float = 0.0
     end_lon: float = 0.0
-    num_passengers: int = 1
+    num_passengers: str = "1"
     passenger_notes: str = ""
     
     # Data lists
@@ -236,7 +236,7 @@ class State(xt.State):
                 end_location_name=self.end_location,
                 end_latitude=self.end_lat,
                 end_longitude=self.end_lon,
-                number_of_passengers=self.num_passengers,
+                number_of_passengers=int(self.num_passengers) if self.num_passengers else 1,
                 passenger_notes=self.passenger_notes
             )
             session.add(new_trip)
@@ -416,7 +416,7 @@ def dashboard() -> xt.Component:
                             xt.input(placeholder="Start Location", value=State.start_location, on_change=State.set_start_location),
                             xt.input(placeholder="End Location", value=State.end_location, on_change=State.set_end_location),
                             xt.input(placeholder="Number of Passengers", type_="number", value=State.num_passengers, on_change=State.set_num_passengers),
-                            xt.textarea(placeholder="Notes", value=State.passenger_notes, on_change=State.set_passenger_notes),
+                            xt.text_area(placeholder="Notes", value=State.passenger_notes, on_change=State.set_passenger_notes),
                             xt.button("Create Trip", on_click=State.create_trip),
                             spacing="3",
                             border="1px solid gray",
@@ -460,5 +460,4 @@ app.add_page(dashboard, route="/dashboard", on_load=State.load_trips)
 # Initialize database
 init_db()
 
-# Compile and run
-app.compile()
+# Note: Compile happens automatically when running the app

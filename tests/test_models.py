@@ -1,9 +1,12 @@
 """
 Unit tests for database models.
 """
-import pytest
+
 from datetime import datetime, timezone
-from euro_bakshish_app import User, Trip, Review, hash_password, verify_password
+
+import pytest
+
+from euro_bakshish_app import Review, Trip, User, hash_password, verify_password
 
 
 @pytest.mark.unit
@@ -16,7 +19,7 @@ class TestUserModel:
             username="passenger1",
             email="passenger1@example.com",
             password_hash=hash_password("securepass"),
-            user_type="passenger"
+            user_type="passenger",
         )
         db_session.add(user)
         db_session.commit()
@@ -38,7 +41,7 @@ class TestUserModel:
             license_number="DL987654",
             vehicle_make="Honda",
             vehicle_model="Accord",
-            vehicle_year=2021
+            vehicle_year=2021,
         )
         db_session.add(user)
         db_session.commit()
@@ -65,7 +68,7 @@ class TestUserModel:
             username=sample_user.username,
             email="different@example.com",
             password_hash=hash_password("password"),
-            user_type="passenger"
+            user_type="passenger",
         )
         db_session.add(duplicate_user)
 
@@ -88,7 +91,7 @@ class TestTripModel:
             end_latitude=40.7580,
             end_longitude=-73.9855,
             status="pending",
-            number_of_passengers=1
+            number_of_passengers=1,
         )
         db_session.add(trip)
         db_session.commit()
@@ -127,7 +130,7 @@ class TestTripModel:
             end_latitude=40.6413,
             end_longitude=-73.7781,
             passenger_notes="Please wait at main entrance",
-            number_of_passengers=3
+            number_of_passengers=3,
         )
         db_session.add(trip)
         db_session.commit()
@@ -158,7 +161,7 @@ class TestReviewModel:
             comment="Excellent driver!",
             punctuality_rating=5,
             cleanliness_rating=5,
-            safety_rating=5
+            safety_rating=5,
         )
         db_session.add(review)
         db_session.commit()
@@ -179,7 +182,7 @@ class TestReviewModel:
             trip_id=sample_trip.id,
             reviewer_id=sample_user.id,
             reviewed_user_id=sample_driver.id,
-            rating=3
+            rating=3,
         )
         db_session.add(review)
         db_session.commit()

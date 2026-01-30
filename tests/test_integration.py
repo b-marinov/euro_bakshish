@@ -1,9 +1,11 @@
 """
 Integration tests for application state and logic.
 """
+
 import pytest
 from sqlmodel import Session, select
-from euro_bakshish_app import User, Trip, hash_password, verify_password
+
+from euro_bakshish_app import Trip, User, hash_password, verify_password
 
 
 @pytest.mark.integration
@@ -21,7 +23,7 @@ class TestUserAuthentication:
             username=username,
             email=email,
             password_hash=hash_password(password),
-            user_type="passenger"
+            user_type="passenger",
         )
         db_session.add(user)
         db_session.commit()
@@ -61,7 +63,7 @@ class TestTripWorkflow:
             end_latitude=40.7829,
             end_longitude=-73.9654,
             number_of_passengers=2,
-            passenger_notes="Looking for a quick ride"
+            passenger_notes="Looking for a quick ride",
         )
         db_session.add(trip)
         db_session.commit()
@@ -119,7 +121,7 @@ class TestTripWorkflow:
                 end_location_name=f"Destination {i}",
                 end_latitude=40.7580,
                 end_longitude=-73.9855,
-                number_of_passengers=1
+                number_of_passengers=1,
             )
             db_session.add(trip)
         db_session.commit()
@@ -145,7 +147,7 @@ class TestStateMutations:
             end_location_name="Work",
             end_latitude=40.7580,
             end_longitude=-73.9855,
-            number_of_passengers=1
+            number_of_passengers=1,
         )
         db_session.add(trip)
         db_session.commit()

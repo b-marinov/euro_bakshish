@@ -1,15 +1,18 @@
 """
 Pytest configuration and fixtures for Euro Bakshish tests.
 """
+
 import os
+
 import pytest
 from sqlmodel import Session, SQLModel, create_engine
-from euro_bakshish_app import User, Trip, Review, hash_password
+
+from euro_bakshish_app import Review, Trip, User, hash_password
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def test_db_engine():
-    """Create a test database engine."""
+    """Create a test database engine for each test function."""
     # Use in-memory SQLite for tests
     database_url = "sqlite:///:memory:"
     engine = create_engine(database_url, echo=False)
@@ -21,9 +24,15 @@ def test_db_engine():
 @pytest.fixture
 def db_session(test_db_engine):
     """Create a new database session for a test."""
-    with Session(test_db_engine) as session:
-        yield session
-        session.rollback()
+    connection = test_db_engine.connect()
+    transaction = connection.begin()
+    session = Session(bind=connection)
+
+    yield session
+
+    session.close()
+    transaction.rollback()
+    connection.close()
 
 
 @pytest.fixture
@@ -33,7 +42,7 @@ def sample_user(db_session):
         username="testuser",
         email="test@example.com",
         password_hash=hash_password("password123"),
-        user_type="passenger"
+        user_type="passenger",
     )
     db_session.add(user)
     db_session.commit()
@@ -55,7 +64,7 @@ def sample_driver(db_session):
         vehicle_year=2020,
         vehicle_color="Blue",
         vehicle_plate_number="ABC123",
-        is_verified=True
+        is_verified=True,
     )
     db_session.add(driver)
     db_session.commit()
@@ -75,7 +84,7 @@ def sample_trip(db_session, sample_user):
         end_latitude=40.6413,
         end_longitude=-73.7781,
         status="pending",
-        number_of_passengers=2
+        number_of_passengers=2,
     )
     db_session.add(trip)
     db_session.commit()

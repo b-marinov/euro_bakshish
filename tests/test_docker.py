@@ -1,11 +1,13 @@
 """
 Docker-specific tests to verify container functionality.
 """
-import pytest
+
+import os
 import subprocess
 import time
+
+import pytest
 import requests
-import os
 
 
 @pytest.mark.docker
@@ -31,8 +33,7 @@ class TestDockerBuild:
 
 @pytest.mark.docker
 @pytest.mark.skipif(
-    os.getenv("SKIP_DOCKER_TESTS") == "1",
-    reason="Docker tests skipped in this environment"
+    os.getenv("SKIP_DOCKER_TESTS") == "1", reason="Docker tests skipped in this environment"
 )
 class TestDockerComposeValidation:
     """Tests for docker-compose configuration validation."""
@@ -44,7 +45,7 @@ class TestDockerComposeValidation:
                 ["docker", "compose", "-f", "docker-compose.yml", "config"],
                 capture_output=True,
                 text=True,
-                timeout=30
+                timeout=30,
             )
             # docker compose config returns 0 on success
             assert result.returncode == 0, f"docker-compose.yml is invalid: {result.stderr}"
@@ -60,7 +61,7 @@ class TestDockerComposeValidation:
                 ["docker", "compose", "-f", "docker-compose.dev.yml", "config"],
                 capture_output=True,
                 text=True,
-                timeout=30
+                timeout=30,
             )
             assert result.returncode == 0, f"docker-compose.dev.yml is invalid: {result.stderr}"
         except FileNotFoundError:
@@ -73,7 +74,7 @@ class TestDockerComposeValidation:
                 ["docker", "compose", "-f", "docker-compose.test.yml", "config"],
                 capture_output=True,
                 text=True,
-                timeout=30
+                timeout=30,
             )
             assert result.returncode == 0, f"docker-compose.test.yml is invalid: {result.stderr}"
         except FileNotFoundError:
@@ -97,8 +98,10 @@ class TestDockerIgnore:
         common_patterns = [
             ".git",
             "__pycache__",
-            "*.pyc",
+            "*.py[cod]",  # Covers .pyc, .pyo, .pyd
         ]
 
         for pattern in common_patterns:
-            assert pattern in content, f"Pattern '{pattern}' not found in .dockerignore"
+            assert (
+                pattern in content
+            ), f"Pattern '{pattern}' not found in .dockerignore"

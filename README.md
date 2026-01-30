@@ -65,18 +65,18 @@ python euro_bakshish_app.py
 - Python 3.10+
 - pip (Python package manager)
 
-That's it! No Node.js, no separate frontend build, no Android Studio needed. Everything runs with Python.
+**Note**: Write everything in Python - NextPy handles the JavaScript/React generation automatically under the hood. You develop in pure Python!
 
 ### Security
 
-⚠️ **Important**: Please review [docs/SECURITY.md](docs/SECURITY.md) before deploying to production.
+⚠️ **Security Improvements**: The NextPy application now uses proper password hashing with bcrypt. See [docs/SECURITY.md](docs/SECURITY.md) before deploying to production.
 
-Key security considerations:
-- Set SECRET_KEY via environment variable (required)
-- Use HTTPS in production
-- Review token storage mechanisms
-- Configure CORS properly
-- Keep dependencies updated
+Key security features:
+- ✅ Secure password hashing (bcrypt)
+- ✅ Session-based authentication
+- ⚠️ Requires HTTPS in production
+- ⚠️ Configure database properly for production
+- ⚠️ Keep dependencies updated
 
 ## Quick Commands
 

@@ -7,9 +7,21 @@ with a unified NextPy application for both backend and frontend.
 """
 
 import nextpy as xt
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List, Optional
 from sqlmodel import Field, Session, SQLModel, create_engine, select
+from passlib.context import CryptContext
+
+# Password hashing
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+def hash_password(password: str) -> str:
+    """Hash a password for storing"""
+    return pwd_context.hash(password)
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    """Verify a password against its hash"""
+    return pwd_context.verify(plain_password, hashed_password)
 
 # Database Models
 
@@ -23,8 +35,8 @@ class User(SQLModel, table=True):
     user_type: str = Field(default="passenger")  # passenger, driver, or both
     phone_number: str = Field(default="")
     date_of_birth: Optional[datetime] = None
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-    updated_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     
     # Profile fields
     preferred_payment_method: str = Field(default="cash")
@@ -74,7 +86,7 @@ class Trip(SQLModel, table=True):
     fare: Optional[float] = None
     
     # Timestamps
-    requested_at: datetime = Field(default_factory=datetime.utcnow)
+    requested_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     accepted_at: Optional[datetime] = None
     started_at: Optional[datetime] = None
     completed_at: Optional[datetime] = None
@@ -85,8 +97,8 @@ class Trip(SQLModel, table=True):
     driver_notes: str = Field(default="")
     number_of_passengers: int = Field(default=1)
     
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-    updated_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 
 class Review(SQLModel, table=True):
@@ -106,8 +118,8 @@ class Review(SQLModel, table=True):
     safety_rating: Optional[int] = Field(default=None, ge=1, le=5)
     communication_rating: Optional[int] = Field(default=None, ge=1, le=5)
     
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-    updated_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 
 # Database setup
@@ -160,7 +172,7 @@ class State(xt.State):
             statement = select(User).where(User.username == self.username)
             user = session.exec(statement).first()
             
-            if user and user.password_hash == self.password:  # Simplified, should use proper hashing
+            if user and verify_password(self.password, user.password_hash):
                 self.logged_in = True
                 self.current_user = {
                     "id": user.id,
@@ -186,11 +198,11 @@ class State(xt.State):
                 self.success_message = ""
                 return
             
-            # Create new user
+            # Create new user with hashed password
             new_user = User(
                 username=self.username,
                 email=self.email,
-                password_hash=self.password,  # Simplified, should use proper hashing
+                password_hash=hash_password(self.password),  # Secure password hashing
                 user_type=self.user_type
             )
             session.add(new_user)
@@ -265,7 +277,7 @@ class State(xt.State):
             if trip and trip.status == "pending":
                 trip.driver_id = self.current_user["id"]
                 trip.status = "accepted"
-                trip.accepted_at = datetime.utcnow()
+                trip.accepted_at = datetime.now(timezone.utc)
                 session.add(trip)
                 session.commit()
                 
@@ -396,7 +408,7 @@ def dashboard() -> xt.Component:
                         State.success_message != "",
                         xt.text(State.success_message, color="green"),
                     ),
-                    xt.button("Create New Trip", on_click=State.set_show_trip_form(True)),
+                    xt.button("Create New Trip", on_click=lambda: State.set_show_trip_form(True)),
                     xt.cond(
                         State.show_trip_form,
                         xt.vstack(
